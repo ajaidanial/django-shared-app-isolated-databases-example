@@ -1,4 +1,5 @@
 from django.contrib.auth.backends import ModelBackend
+from django.utils.connection import ConnectionDoesNotExist
 
 from main_app.models import UserDatabaseTracker, AppUser
 
@@ -19,9 +20,13 @@ class AppModelBackend(ModelBackend):
         )
 
         if database_tracker:
-            user = AppUser.objects.using(database_tracker.db).get_or_none(
-                username=username
-            )
+
+            try:
+                user = AppUser.objects.using(database_tracker.db).get_or_none(
+                    username=username
+                )
+            except ConnectionDoesNotExist:
+                user = None
 
             if (
                 user
