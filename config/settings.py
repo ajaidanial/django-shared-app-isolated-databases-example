@@ -53,6 +53,7 @@ DATABASES = {
     },
 }
 DATABASE_ROUTERS = ["main_app.db_routers.AppDBRouter"]
+AUTH_USER_MODEL = 'main_app.AppUser'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
