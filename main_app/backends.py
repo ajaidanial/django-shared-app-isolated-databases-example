@@ -1,7 +1,7 @@
 from django.contrib.auth.backends import ModelBackend
 from django.utils.connection import ConnectionDoesNotExist
 
-from main_app.models import UserDatabaseTracker, AppUser
+from main_app.models import AppUser, UserDatabaseTracker
 
 
 class AppModelBackend(ModelBackend):
@@ -16,18 +16,23 @@ class AppModelBackend(ModelBackend):
         """Handle when called."""
 
         database_tracker = UserDatabaseTracker.objects.get_or_none(
-            user_identifier=username)
+            user_identifier=username
+        )
 
         if database_tracker:
 
             try:
                 user = AppUser.objects.using(database_tracker.db).get_or_none(
-                    username=username)
+                    username=username
+                )
             except ConnectionDoesNotExist:
                 user = None
 
-            if (user and user.check_password(password) and self.user_can_authenticate(
-                user)):
+            if (
+                user
+                and user.check_password(password)
+                and self.user_can_authenticate(user)
+            ):
                 return user  # all good
 
         return None

@@ -6,12 +6,12 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.connection import ConnectionDoesNotExist
-from django.views.generic import FormView, CreateView
+from django.views.generic import CreateView, FormView
 
-from main_app.forms import UserRegistrationForm, DummyObjectForm
+from main_app.forms import DummyObjectForm, UserRegistrationForm
 from main_app.helpers import app_login
 from main_app.middlewares import get_current_db_name
-from main_app.models import UserDatabaseTracker, DummyObject
+from main_app.models import DummyObject, UserDatabaseTracker
 
 
 class AppLoginRequiredMixin(LoginRequiredMixin):
@@ -25,8 +25,9 @@ class AppLoginRequiredMixin(LoginRequiredMixin):
         try:
 
             if request.user and request.user.is_authenticated:
-                return super(AppLoginRequiredMixin, self).dispatch(request, *args,
-                    **kwargs)
+                return super(AppLoginRequiredMixin, self).dispatch(
+                    request, *args, **kwargs
+                )
 
         except ConnectionDoesNotExist:
             return redirect(settings.LOGIN_URL)
@@ -79,17 +80,23 @@ class UserRegistrationView(FormView):
     success_url = reverse_lazy("login_view")
 
     def form_valid(self, form):
-        """Database has to be created."""
+        """
+        Database has to be created. We have skipped all form of model level
+        validations for now and implemented it in terms of delete.
+        """
 
         # let username be both | login happens through username
-        database_name = form.cleaned_data["username"]
+        username = form.cleaned_data["username"]
 
         # create and handle the database
-        tracker = UserDatabaseTracker.objects.create(user_identifier=database_name,
-            database_name=database_name)
+        UserDatabaseTracker.objects.filter(user_identifier=username).delete()
+        tracker = UserDatabaseTracker.objects.create(
+            user_identifier=username, database_name=username
+        )
         tracker.setup_database_and_configurations()
 
         # create the user on the user's database
+        get_user_model().objects.using(tracker.db).filter(username=username).delete()
         get_user_model().objects.create_user(**form.cleaned_data, use_db=tracker.db)
 
         return super(UserRegistrationView, self).form_valid(form=form)

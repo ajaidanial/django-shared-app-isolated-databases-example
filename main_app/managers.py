@@ -1,5 +1,5 @@
 from django.contrib.auth.models import UserManager
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.db import DEFAULT_DB_ALIAS
 from django.db.models import QuerySet
 
