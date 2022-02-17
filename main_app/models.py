@@ -29,6 +29,10 @@ class UserDatabaseTracker(BaseModel):
     user_identifier = models.CharField(max_length=255, unique=True)
     database_name = models.CharField(max_length=255)
 
+    @property
+    def db(self):
+        return self.database_name
+
     def set_up_database_and_configurations(self):
         """Adds the db to the settings and creates the db if necessary."""
 
