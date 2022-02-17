@@ -67,7 +67,7 @@ class UserRegistrationView(FormView):
         tracker = UserDatabaseTracker.objects.create(
             user_identifier=database_name, database_name=database_name
         )
-        tracker.set_up_database_and_configurations()
+        tracker.setup_database_and_configurations()
 
         # create the user on the user's database
         get_user_model().objects.create_user(**form.cleaned_data, use_db=tracker.db)

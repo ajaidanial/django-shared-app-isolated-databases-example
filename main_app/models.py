@@ -53,7 +53,7 @@ class UserDatabaseTracker(BaseModel):
         """Returns the db name."""
         return self.database_name
 
-    def set_up_database_and_configurations(self):
+    def setup_database_and_configurations(self):
         """Adds the db to the settings and creates the db if necessary."""
 
         db_name = self.database_name

@@ -14,7 +14,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles",
+    "django.contrib.staticfiles",  # custom apps
     "main_app",
 ]
 
@@ -26,6 +26,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # isolated databases handling helper
     "main_app.middlewares.AppIsolatedDatabasesHelperMiddleware",
 ]
 
@@ -49,14 +50,21 @@ TEMPLATES = [
     },
 ]
 
-DATABASES = {
+# runtime databases are added here while user creation dynamically
+DATABASES = {  # default database which contains other database routing information
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "default.sqlite3",
     },
 }
+
+# custom router to handle dynamic databases
 DATABASE_ROUTERS = ["main_app.db_routers.AppDBRouter"]
+
+# user model for the app
 AUTH_USER_MODEL = "main_app.AppUser"
+
+# custom backend to handle authentication from multiple databases
 AUTHENTICATION_BACKENDS = ["main_app.backends.AppModelBackend"]
 LOGIN_URL = reverse_lazy("login_view")
 
