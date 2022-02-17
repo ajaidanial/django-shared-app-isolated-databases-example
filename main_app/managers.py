@@ -1,4 +1,5 @@
 from django.contrib.auth.models import UserManager
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db import DEFAULT_DB_ALIAS
 from django.db.models import QuerySet
 
@@ -19,7 +20,18 @@ class BaseObjectManagerQuerySet(QuerySet):
         objects = BaseObjectManagerQuerySet.as_manager()
     """
 
-    pass
+    def get_or_none(self, *args, **kwargs):
+        """
+        Get the object based on the given **kwargs. If not present returns None.
+        Note: Expects a single instance.
+        """
+
+        try:
+            return self.get(*args, **kwargs)
+        # if does not exist or if idiotic values like id=None is passed
+        except (
+            ObjectDoesNotExist, AttributeError, ValueError, MultipleObjectsReturned,):
+            return None
 
 
 class AppUserManagerQuerySet(BaseObjectManagerQuerySet, UserManager):
