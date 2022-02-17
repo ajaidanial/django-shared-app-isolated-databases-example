@@ -23,12 +23,10 @@ class AppLoginRequiredMixin(LoginRequiredMixin):
 
     def dispatch(self, request, *args, **kwargs):
 
-        try:
+        try:  # noqa
 
             if request.user and request.user.is_authenticated:
-                return super(AppLoginRequiredMixin, self).dispatch(
-                    request, *args, **kwargs
-                )
+                return super().dispatch(request, *args, **kwargs)
 
         except ConnectionDoesNotExist:
             pass
@@ -44,7 +42,7 @@ class PingView(AppLoginRequiredMixin, CreateView):
     success_url = "."
 
     def get_context_data(self, **kwargs):
-        data = super(PingView, self).get_context_data(**kwargs)
+        data = super().get_context_data(**kwargs)
 
         user = self.request.user
         message = f"""
@@ -102,7 +100,7 @@ class UserRegistrationView(FormView):
         get_user_model().objects.using(tracker.db).filter(username=username).delete()
         get_user_model().objects.create_user(**form.cleaned_data, use_db=tracker.db)
 
-        return super(UserRegistrationView, self).form_valid(form=form)
+        return super().form_valid(form=form)
 
 
 class AppLogoutView(AppLoginRequiredMixin, View):

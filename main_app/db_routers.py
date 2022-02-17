@@ -3,7 +3,7 @@ from django.db import DEFAULT_DB_ALIAS
 from main_app.middlewares import get_current_db_name
 
 
-class AppDBRouter(object):
+class AppDBRouter:
     """
     Router for routing the model actions to the necessary databases.
 

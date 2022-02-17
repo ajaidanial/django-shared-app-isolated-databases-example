@@ -65,7 +65,7 @@ class UserDatabaseTracker(BaseModel):
 
         db_name = self.database_name
 
-        print(f"Initializing database: {db_name}")
+        print(f"Initializing database: {db_name}")  # noqa
         settings.DATABASES[db_name] = {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": settings.BASE_DIR / f"{db_name}.sqlite3",

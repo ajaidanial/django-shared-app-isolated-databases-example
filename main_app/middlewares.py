@@ -13,7 +13,7 @@ def get_current_db_name():
 def set_db_for_router(db):
     """Sets which db for user, to the thread."""
 
-    setattr(THREAD_LOCAL, "use_db", db)
+    setattr(THREAD_LOCAL, "use_db", db)  # noqa
 
 
 class AppIsolatedDatabasesHelperMiddleware:
