@@ -1,4 +1,5 @@
 from django.contrib.auth.models import UserManager
+from django.db import DEFAULT_DB_ALIAS
 from django.db.models import QuerySet
 
 
@@ -24,4 +25,15 @@ class BaseObjectManagerQuerySet(QuerySet):
 class AppUserManagerQuerySet(BaseObjectManagerQuerySet, UserManager):
     """Base class."""
 
-    pass
+    def _create_user(self, username, email, password, **extra_fields):
+        """Set which db the user has to be created."""
+
+        use_db = extra_fields.pop("use_db", DEFAULT_DB_ALIAS)
+        self._db = use_db
+
+        return super()._create_user(username, email, password, **extra_fields)
+
+    def normalize_email(cls, email):
+        """Inheritance issues."""
+
+        return UserManager.normalize_email(email=email)
