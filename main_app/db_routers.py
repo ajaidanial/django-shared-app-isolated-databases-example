@@ -1,5 +1,7 @@
 from django.db import DEFAULT_DB_ALIAS
 
+from main_app.middlewares import get_current_db_name
+
 
 class AppDBRouter(object):
     """
@@ -13,8 +15,14 @@ class AppDBRouter(object):
     def get_db_name(self, model, **kwargs):
         """Common function to return the db name."""
 
-        # TODO: get from local thread
-        return getattr(model, "use_db", DEFAULT_DB_ALIAS)
+        # first preference from the model
+        use_db = getattr(model, "use_db", None)
+
+        # second preference from the thread
+        if not use_db:
+            use_db = get_current_db_name()
+
+        return use_db if use_db else DEFAULT_DB_ALIAS
 
     def db_for_read(self, model, **hints):
         """For read actions."""
