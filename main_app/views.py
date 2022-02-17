@@ -1,29 +1,37 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic import FormView
+from django.views.generic import FormView, CreateView
 
-from main_app.forms import UserRegistrationForm
+from main_app.forms import UserRegistrationForm, DummyObjectForm
 from main_app.helpers import app_login
 from main_app.middlewares import get_current_db_name
-from main_app.models import UserDatabaseTracker
+from main_app.models import UserDatabaseTracker, DummyObject
 
 
-@login_required
-def ping_view(request):
-    """Just a ping view."""
+class PingView(LoginRequiredMixin, CreateView):
+    """Just a ping view. Used to create the dummy objects also."""
 
-    user = request.user
+    template_name = "ping_view.html"
+    form_class = DummyObjectForm
+    success_url = "."
 
-    message = f"""
-    Database Name: {get_current_db_name()}
-    <br />
-    User: {user.email}
-    """
+    def get_context_data(self, **kwargs):
+        data = super(PingView, self).get_context_data(**kwargs)
 
-    return HttpResponse(message)
+        user = self.request.user
+        message = f"""
+            User: {user.email}
+            <br />
+            Database Name: {get_current_db_name()}
+            <br />
+            Database Specific Dummy Data: {[_.name for _ in DummyObject.objects.all()]}
+        """
+
+        data["message"] = message
+        return data
 
 
 class UserLoginView(LoginView):
