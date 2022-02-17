@@ -49,8 +49,16 @@ TEMPLATES = [
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+        "NAME": BASE_DIR / "default.sqlite3",
+    },
+    "db_1": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db_1.sqlite3",
+    },
+    "db_2": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db_2.sqlite3",
+    },
 }
 
 AUTH_PASSWORD_VALIDATORS = [
