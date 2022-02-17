@@ -2,6 +2,8 @@ from django.contrib.auth import login
 from django.db import DEFAULT_DB_ALIAS, connections
 from django.db.migrations.executor import MigrationExecutor
 
+from main_app.middlewares import set_db_for_router
+
 
 def is_default_database_synchronized():
     """
@@ -28,5 +30,5 @@ def app_login(request, user):
     dynamic dy logic and handling.
     """
 
-    # TODO: implement database based logic
-    breakpoint()
+    set_db_for_router(user.db)
+    login(request, user)
