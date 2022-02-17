@@ -30,7 +30,11 @@ class BaseObjectManagerQuerySet(QuerySet):
             return self.get(*args, **kwargs)
         # if does not exist or if idiotic values like id=None is passed
         except (
-            ObjectDoesNotExist, AttributeError, ValueError, MultipleObjectsReturned,):
+            ObjectDoesNotExist,
+            AttributeError,
+            ValueError,
+            MultipleObjectsReturned,
+        ):
             return None
 
 
