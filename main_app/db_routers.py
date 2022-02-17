@@ -25,3 +25,13 @@ class AppDBRouter(object):
         """For write actions."""
 
         return self.get_db_name(model, **hints)
+
+    def allow_relation(self, *args, **kwargs):
+        """Prevent unnecessary breakages."""
+
+        return True
+
+    def allow_syncdb(self, *args, **kwargs):
+        """Prevent unnecessary breakages."""
+
+        return None
