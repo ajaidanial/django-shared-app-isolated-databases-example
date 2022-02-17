@@ -12,7 +12,7 @@ from main_app.models import UserDatabaseTracker, DummyObject
 
 
 class PingView(LoginRequiredMixin, CreateView):
-    """Just a ping view. Used to create the dummy objects also."""
+    """Just a ping view. Used to create the dummy objects also for demo."""
 
     template_name = "ping_view.html"
     form_class = DummyObjectForm
@@ -35,7 +35,7 @@ class PingView(LoginRequiredMixin, CreateView):
 
 
 class UserLoginView(LoginView):
-    """App view for handling login."""
+    """App view for handling login logic."""
 
     success_url = reverse_lazy("ping_view")
     template_name = "user_login_form.html"

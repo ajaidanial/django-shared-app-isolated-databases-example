@@ -15,5 +15,5 @@ def register_all_models():
             pass
 
 
-# Register all Models
+# register all models on runtime
 register_all_models()

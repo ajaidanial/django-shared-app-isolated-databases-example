@@ -5,7 +5,7 @@ from main_app.models import DummyObject
 
 
 class AppModelForm(ModelForm):
-    """Base class."""
+    """Base class. If in case need to override in the future."""
 
     class Meta:
         pass

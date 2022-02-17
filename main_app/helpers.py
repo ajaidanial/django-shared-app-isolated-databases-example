@@ -26,9 +26,9 @@ def is_default_database_synchronized():
 
 def app_login(request, user):
     """
-    Central app function to login. Handles all the
-    dynamic dy logic and handling.
+    Central app function to login a user. Handles all the
+    dynamic database logic and handling.
     """
 
-    set_db_for_router(user.db)
+    set_db_for_router(user.db)  # needed for login
     login(request, user)

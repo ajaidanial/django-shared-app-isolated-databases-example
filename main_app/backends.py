@@ -4,7 +4,12 @@ from main_app.models import UserDatabaseTracker, AppUser
 
 
 class AppModelBackend(ModelBackend):
-    """Custom backend to authenticate the user based on the database."""
+    """
+    Custom auth backend to authenticate the user based on the user's database.
+
+    The default auth backend will not work since the user's data is present
+    in multiple databases. Get the database based on routing tracker.
+    """
 
     def authenticate(self, request, username=None, password=None, **kwargs):
         """Handle when called."""
@@ -18,7 +23,11 @@ class AppModelBackend(ModelBackend):
                 username=username
             )
 
-            if user.check_password(password) and self.user_can_authenticate(user):
+            if (
+                user
+                and user.check_password(password)
+                and self.user_can_authenticate(user)
+            ):
                 return user  # all good
 
         return super(AppModelBackend, self).authenticate(

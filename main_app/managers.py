@@ -39,7 +39,7 @@ class BaseObjectManagerQuerySet(QuerySet):
 
 
 class AppUserManagerQuerySet(BaseObjectManagerQuerySet, UserManager):
-    """Base class."""
+    """Base class. Used to implement necessary logic."""
 
     def _create_user(self, username, email, password, **extra_fields):
         """Set which db the user has to be created."""
@@ -50,6 +50,6 @@ class AppUserManagerQuerySet(BaseObjectManagerQuerySet, UserManager):
         return super()._create_user(username, email, password, **extra_fields)
 
     def normalize_email(cls, email):
-        """Inheritance issues."""
+        """Inheritance issues. This is just an adaptor."""
 
         return UserManager.normalize_email(email=email)

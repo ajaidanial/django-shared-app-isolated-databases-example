@@ -9,7 +9,7 @@ class AppDBRouter(object):
 
     Works based on two ways:
         1. Uses the `use_db` value set on the model layer.
-        2. The `use_db` value set on the local thread.
+        2. The `use_db` value set on the local thread while login and request.
     """
 
     def get_db_name(self, model, **kwargs):

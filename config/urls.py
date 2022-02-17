@@ -15,7 +15,7 @@ urlpatterns = [
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-# apply all the necessary init app configurations
+# apply all the necessary init app configurations | called once after app init
 if helpers.is_default_database_synchronized():
     from main_app.models import UserDatabaseTracker
 
