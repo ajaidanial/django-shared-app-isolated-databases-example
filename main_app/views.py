@@ -1,11 +1,12 @@
 from django.conf import settings
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.connection import ConnectionDoesNotExist
+from django.views import View
 from django.views.generic import CreateView, FormView
 
 from main_app.forms import DummyObjectForm, UserRegistrationForm
@@ -30,7 +31,9 @@ class AppLoginRequiredMixin(LoginRequiredMixin):
                 )
 
         except ConnectionDoesNotExist:
-            return redirect(settings.LOGIN_URL)
+            pass
+
+        return redirect(settings.LOGIN_URL)
 
 
 class PingView(AppLoginRequiredMixin, CreateView):
@@ -100,3 +103,13 @@ class UserRegistrationView(FormView):
         get_user_model().objects.create_user(**form.cleaned_data, use_db=tracker.db)
 
         return super(UserRegistrationView, self).form_valid(form=form)
+
+
+class AppLogoutView(AppLoginRequiredMixin, View):
+    """View to log out the user."""
+
+    def get(self, request, *args, **kwargs):
+        """Handle on get."""
+
+        logout(request)
+        return redirect(settings.LOGIN_URL)
