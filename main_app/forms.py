@@ -18,6 +18,10 @@ class UserRegistrationForm(AppModelForm):
         model = get_user_model()
         fields = ["username", "email", "password"]
 
+    def clean(self):
+        self._validate_unique = True
+        return self.cleaned_data
+
 
 class DummyObjectForm(AppModelForm):
     """Form to handle the dummy object creation."""
