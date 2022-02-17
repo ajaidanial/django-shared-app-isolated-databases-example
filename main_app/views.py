@@ -34,12 +34,12 @@ class UserRegistrationView(FormView):
     def form_valid(self, form):
         """Database has to be created."""
 
+        # let username be both | login happens through username
         database_name = form.cleaned_data["username"]
-        user_identifier = form.cleaned_data["email"]
 
         # create and handle the database
         UserDatabaseTracker.objects.create(
-            user_identifier=user_identifier, database_name=database_name
+            user_identifier=database_name, database_name=database_name
         ).set_up_database_and_configurations()
 
         # create the user on the user's database
