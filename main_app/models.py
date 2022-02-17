@@ -31,6 +31,15 @@ class AppUser(AbstractUser):
         return tracker.db
 
 
+class DummyObject(BaseModel):
+    """
+    Just a dummy model to demonstrate that data is being stored
+    in the user specific databases.
+    """
+
+    name = models.CharField(max_length=255)
+
+
 class UserDatabaseTracker(BaseModel):
     """Table to track which database belongs to which user."""
 
