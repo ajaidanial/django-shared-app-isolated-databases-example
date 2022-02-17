@@ -1,8 +1,11 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from django.utils.connection import ConnectionDoesNotExist
 from django.views.generic import FormView, CreateView
 
 from main_app.forms import UserRegistrationForm, DummyObjectForm
@@ -11,7 +14,25 @@ from main_app.middlewares import get_current_db_name
 from main_app.models import UserDatabaseTracker, DummyObject
 
 
-class PingView(LoginRequiredMixin, CreateView):
+class AppLoginRequiredMixin(LoginRequiredMixin):
+    """
+    Used to identify and ignore the failure cases. If the
+    connection is not present.
+    """
+
+    def dispatch(self, request, *args, **kwargs):
+
+        try:
+
+            if request.user and request.user.is_authenticated:
+                return super(AppLoginRequiredMixin, self).dispatch(request, *args,
+                    **kwargs)
+
+        except ConnectionDoesNotExist:
+            return redirect(settings.LOGIN_URL)
+
+
+class PingView(AppLoginRequiredMixin, CreateView):
     """Just a ping view. Used to create the dummy objects also for demo."""
 
     template_name = "ping_view.html"
@@ -64,9 +85,8 @@ class UserRegistrationView(FormView):
         database_name = form.cleaned_data["username"]
 
         # create and handle the database
-        tracker = UserDatabaseTracker.objects.create(
-            user_identifier=database_name, database_name=database_name
-        )
+        tracker = UserDatabaseTracker.objects.create(user_identifier=database_name,
+            database_name=database_name)
         tracker.setup_database_and_configurations()
 
         # create the user on the user's database
