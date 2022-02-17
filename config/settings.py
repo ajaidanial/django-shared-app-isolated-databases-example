@@ -58,7 +58,7 @@ DATABASES = {
 DATABASE_ROUTERS = ["main_app.db_routers.AppDBRouter"]
 AUTH_USER_MODEL = "main_app.AppUser"
 AUTHENTICATION_BACKENDS = ["main_app.backends.AppModelBackend"]
-LOGIN_URL = reverse_lazy('login_view')
+LOGIN_URL = reverse_lazy("login_view")
 
 AUTH_PASSWORD_VALIDATORS = [
     {

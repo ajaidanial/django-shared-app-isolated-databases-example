@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -6,14 +7,23 @@ from django.views.generic import FormView
 
 from main_app.forms import UserRegistrationForm
 from main_app.helpers import app_login
+from main_app.middlewares import get_current_db_name
 from main_app.models import UserDatabaseTracker
 
 
+@login_required
 def ping_view(request):
     """Just a ping view."""
 
-    # TODO: print data, create dummy data in users database
-    return HttpResponse("Pong!")
+    user = request.user
+
+    message = f"""
+    Database Name: {get_current_db_name()}
+    <br />
+    User: {user.email}
+    """
+
+    return HttpResponse(message)
 
 
 class UserLoginView(LoginView):
@@ -26,7 +36,7 @@ class UserLoginView(LoginView):
         """Login and set the db on request."""
 
         app_login(request=self.request, user=form.get_user())
-        return HttpResponseRedirect(self.get_success_url())
+        return HttpResponseRedirect(self.success_url)
 
 
 class UserRegistrationView(FormView):
