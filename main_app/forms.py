@@ -19,7 +19,7 @@ class UserRegistrationForm(AppModelForm):
         fields = ["username", "email", "password"]
 
     def clean(self):
-        self._validate_unique = True
+        self._validate_unique = False
         return self.cleaned_data
 
 
