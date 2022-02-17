@@ -20,6 +20,16 @@ class AppUser(AbstractUser):
 
     objects = AppUserManagerQuerySet.as_manager()
 
+    @property
+    def db(self):
+        """Returns the db name. DRY function."""
+
+        tracker = UserDatabaseTracker.objects.get_or_none(user_identifier=self.username)
+
+        assert tracker  # let it break
+
+        return tracker.db
+
 
 class UserDatabaseTracker(BaseModel):
     """Table to track which database belongs to which user."""
@@ -31,6 +41,7 @@ class UserDatabaseTracker(BaseModel):
 
     @property
     def db(self):
+        """Returns the db name."""
         return self.database_name
 
     def set_up_database_and_configurations(self):
