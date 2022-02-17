@@ -52,6 +52,7 @@ DATABASES = {
         "NAME": BASE_DIR / "default.sqlite3",
     },
 }
+DATABASE_ROUTERS = ["main_app.db_routers.AppDBRouter"]
 
 AUTH_PASSWORD_VALIDATORS = [
     {
