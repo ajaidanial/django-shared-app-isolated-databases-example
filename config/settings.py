@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 
+from django.urls import reverse_lazy
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-e_dvz1=*i^bc86z1#$p3)9k+a5&qrc7kfne=&08m3$x-qsj)m%"
 DEBUG = True
@@ -56,6 +58,7 @@ DATABASES = {
 DATABASE_ROUTERS = ["main_app.db_routers.AppDBRouter"]
 AUTH_USER_MODEL = "main_app.AppUser"
 AUTHENTICATION_BACKENDS = ["main_app.backends.AppModelBackend"]
+LOGIN_URL = reverse_lazy('login_view')
 
 AUTH_PASSWORD_VALIDATORS = [
     {
